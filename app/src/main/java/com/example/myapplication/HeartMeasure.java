@@ -13,6 +13,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
 import android.hardware.Camera.PreviewCallback;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -31,7 +32,7 @@ public class HeartMeasure extends AppCompatActivity implements SurfaceHolder.Cal
 
 
     private static final AtomicBoolean processing = new AtomicBoolean(false);
-
+    private static TextView mTV_Heart_Rate = null;
     private static double beats = 0;
     private static long startTime = 0;
     private static int beatsIndex = 0;
@@ -51,8 +52,8 @@ public class HeartMeasure extends AppCompatActivity implements SurfaceHolder.Cal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_first);
-
+        setContentView(R.layout.activity_main);
+        TextView mTV_Heart_Rate = (TextView) findViewById(R.id.number1);
         SurfaceView = (SurfaceView) findViewById(R.id.bgc);
         SurfaceHolder = SurfaceView.getHolder();
         SurfaceHolder.addCallback(this);
@@ -199,9 +200,14 @@ public class HeartMeasure extends AppCompatActivity implements SurfaceHolder.Cal
                 currentType = newType;
             }*/
 
+            Toast message = Toast.makeText(c, "please wait 45s",Toast.LENGTH_LONG);
+            message.show();
             long endTime = System.currentTimeMillis();
             double totalTimeInSecs = (endTime - startTime) / 1000d;
             if (totalTimeInSecs >= 10) {
+                message.cancel();
+                Toast finish_message = Toast.makeText(c, "finish the measure",Toast.LENGTH_LONG);
+                finish_message.show();
                 double bps = (beats / totalTimeInSecs);
                 int dpm = (int) (bps * 60d);
                 if (dpm < 30 || dpm > 180) {
@@ -228,8 +234,8 @@ public class HeartMeasure extends AppCompatActivity implements SurfaceHolder.Cal
                 }
                 int beatsAvg = (beatsArrayAvg / beatsArrayCnt);
 
-                Toast t = Toast.makeText(c, String.valueOf(beatsAvg), Toast.LENGTH_LONG);
-                t.show();
+                mTV_Heart_Rate.setText(String.valueOf(beatsAvg));
+                finish_message.cancel();
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(c);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("LAST_MEASURE", String.valueOf(beatsAvg));

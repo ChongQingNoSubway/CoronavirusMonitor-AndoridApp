@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import android.view.Menu;
@@ -36,18 +37,8 @@ public class MainActivity extends AppCompatActivity {
 
             TextView tv = (TextView) findViewById(R.id.number1);
             tv.setText(number);
-//
+
             RatingBar rb = (RatingBar) findViewById(R.id.ratingBar);
-            tv = (TextView) findViewById(R.id.text);
-            if (Double.parseDouble(number) > 90) {
-                //Cosa mala
-                rb.setRating(0);
-                tv.setText("Your heart rate is to high");
-            } else {
-                //Cosa buena
-                rb.setRating(1);
-                tv.setText("Your heart rate is correct");
-            }
         }
 
     }
@@ -65,12 +56,12 @@ public class MainActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 0);
         }
-        LayoutInflater factory = LayoutInflater.from(MainActivity.this);
-        View fg_one = factory.inflate(R.layout.fragment_first, null);
-        final Button button = (Button) fg_one.findViewById(R.id.heartRate);
+//        LayoutInflater factory = LayoutInflater.from(MainActivity.this);
+//        View fg_one = factory.inflate(R.layout.fragment_first, null);
+        final Button button = (Button) findViewById(R.id.heartRate);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
+                Log.v("123","123");
                 Intent intent;
                 intent = new Intent(getApplicationContext(), HeartMeasure.class);
                 startActivity(intent);

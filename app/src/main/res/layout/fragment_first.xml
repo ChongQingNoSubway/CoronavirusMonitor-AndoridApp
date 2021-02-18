@@ -30,7 +30,7 @@
         app:layout_constraintVertical_bias="0.931" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/number1"
         android:layout_width="405dp"
         android:layout_height="57dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -50,18 +50,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.825" />
-
-    <Button
-        android:id="@+id/bgc"
-        android:layout_width="173dp"
-        android:layout_height="147dp"
-        android:text="back facing camera"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.016"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.402" />
 
     <Button
         android:id="@+id/uploadSigns"
@@ -88,12 +76,26 @@
         app:layout_constraintVertical_bias="0.346" />
 
     <SurfaceView
-        android:id="@+id/id_preview"
-        android:layout_width="310dp"
-        android:layout_height="79dp"
+        android:id="@+id/bgc"
+        android:layout_width="182dp"
+        android:layout_height="143dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.406" />
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/bgc"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.725" />
+
 
 </android.support.constraint.ConstraintLayout>

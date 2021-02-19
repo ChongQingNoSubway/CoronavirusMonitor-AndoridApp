@@ -18,7 +18,7 @@
         app:layout_constraintVertical_bias="0.72" />
 
     <Button
-        android:id="@+id/respiratoryRate"
+        android:id="@+id/measure_respiratory_rate"
         android:layout_width="408dp"
         android:layout_height="49dp"
         android:text="MEASURE  RESPIRATORY  RATE"
@@ -41,7 +41,7 @@
         app:layout_constraintVertical_bias="0.622" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/respiratory_rate"
         android:layout_width="401dp"
         android:layout_height="44dp"
         app:layout_constraintBottom_toBottomOf="parent"

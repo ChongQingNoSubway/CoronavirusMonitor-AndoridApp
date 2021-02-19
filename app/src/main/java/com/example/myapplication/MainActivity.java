@@ -7,10 +7,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import android.annotation.SuppressLint;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
@@ -24,9 +27,18 @@ import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.view.LayoutInflater;
+import android.content.Context;
+import android.widget.Toast;
+import android.os.Handler;
+
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    ArrayList<float[]> accelerometerReadings = new ArrayList<>();
+    public static final int RECORDING_TIME =  45000;
+    float respiratoryRate = 0f;
 
     @Override
     protected void onResume(){
@@ -48,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        final TextView respiratoryRateView = findViewById(R.id.respiratory_rate);
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -67,6 +82,76 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+
+        Button measureRespiratoryRate = findViewById(R.id.measure_respiratory_rate);
+
+        measureRespiratoryRate.setOnClickListener(new Button.OnClickListener(){
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onClick(View view) {
+
+                Sensor accelerometer;
+                final SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+                if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
+
+                    final SensorEventListener sensorListener = new SensorEventListener() {
+
+                        public void onSensorChanged(SensorEvent event) {
+
+                            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+
+                                accelerometerReadings.add(new float[]{event.values[0],
+                                        event.values[1],
+                                        event.values[2]});
+                            }
+                        }
+                        @Override
+                        public void onAccuracyChanged(Sensor sensor, int i) {
+
+                        }
+                    };
+
+                    respiratoryRateView.setText(" Please wait. Collecting accelerometer data for "
+                            + (RECORDING_TIME/1000) + "s...");
+
+                    accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+                    sensorManager.registerListener(sensorListener,
+                            accelerometer,
+                            SensorManager.SENSOR_DELAY_NORMAL);
+
+                    new Handler().postDelayed(new Runnable() {
+
+                        @SuppressLint("DefaultLocale")
+                        @Override
+                        public void run() {
+
+                            sensorManager.unregisterListener(sensorListener);
+                            Toast.makeText(getApplicationContext(),
+                                    "Accelerometer data collected!",
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                            System.out.println("Accelerometer readings size: "
+                                    + accelerometerReadings.size());
+
+                            respiratoryRate = new RespiratoryRateMonitor()
+                                    .calculateRespiratoryRate(accelerometerReadings);
+                            respiratoryRateView.setText(String.format("%.1f", respiratoryRate));
+                        }
+                    }, RECORDING_TIME);
+                }
+                else {
+
+                    Toast.makeText(getApplicationContext(),
+                            "No Sensor!",
+                            Toast.LENGTH_LONG)
+                            .show();
+                }
+            }
+        });
+
     }
 
     @Override

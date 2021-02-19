@@ -32,7 +32,7 @@ public class HeartMeasure extends AppCompatActivity implements SurfaceHolder.Cal
 
 
     private static final AtomicBoolean processing = new AtomicBoolean(false);
-    private static TextView mTV_Heart_Rate = null;
+    public  static TextView ts = null;
     private static double beats = 0;
     private static long startTime = 0;
     private static int beatsIndex = 0;
@@ -53,7 +53,7 @@ public class HeartMeasure extends AppCompatActivity implements SurfaceHolder.Cal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        TextView mTV_Heart_Rate = (TextView) findViewById(R.id.number1);
+        ts = (TextView) findViewById(R.id.number1);
         SurfaceView = (SurfaceView) findViewById(R.id.bgc);
         SurfaceHolder = SurfaceView.getHolder();
         SurfaceHolder.addCallback(this);
@@ -115,10 +115,7 @@ public class HeartMeasure extends AppCompatActivity implements SurfaceHolder.Cal
         mCamera.release();
     }
 
-    /**
-     * FROM: http://stackoverflow.com/questions/4645960/how-to-set-android-camera-orientation-properly
-     * @param camera
-     */
+
     public void setCameraDisplayOrientation(android.hardware.Camera camera) {
         Camera.Parameters parameters = camera.getParameters();
         android.hardware.Camera.CameraInfo camInfo = new android.hardware.Camera.CameraInfo();
@@ -195,19 +192,13 @@ public class HeartMeasure extends AppCompatActivity implements SurfaceHolder.Cal
             averageArray[averageIndex] = imgAvg;
             averageIndex++;
 
-            // Transitioned from one state to another to the same
-            /*if (newType != currentType) {
-                currentType = newType;
-            }*/
-
-            Toast message = Toast.makeText(c, "please wait 45s",Toast.LENGTH_LONG);
-            message.show();
+            Toast mToast = Toast.makeText(c, "please wait 45S , and put your finger on the back camera", Toast.LENGTH_LONG);
+            mToast.show();
             long endTime = System.currentTimeMillis();
             double totalTimeInSecs = (endTime - startTime) / 1000d;
             if (totalTimeInSecs >= 10) {
-                message.cancel();
-                Toast finish_message = Toast.makeText(c, "finish the measure",Toast.LENGTH_LONG);
-                finish_message.show();
+                mToast.makeText(c, "finish the measure", Toast.LENGTH_LONG);
+                mToast.show();
                 double bps = (beats / totalTimeInSecs);
                 int dpm = (int) (bps * 60d);
                 if (dpm < 30 || dpm > 180) {
@@ -233,12 +224,11 @@ public class HeartMeasure extends AppCompatActivity implements SurfaceHolder.Cal
                     }
                 }
                 int beatsAvg = (beatsArrayAvg / beatsArrayCnt);
-
-                mTV_Heart_Rate.setText(String.valueOf(beatsAvg));
-                finish_message.cancel();
+                ts.setText(String.valueOf(beatsAvg));
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(c);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("LAST_MEASURE", String.valueOf(beatsAvg));
+                mToast.cancel();
                 editor.commit();
 
                 startTime = System.currentTimeMillis();
@@ -248,6 +238,8 @@ public class HeartMeasure extends AppCompatActivity implements SurfaceHolder.Cal
         }
 
     };
+
+
 }
 
 

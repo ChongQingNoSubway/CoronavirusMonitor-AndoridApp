@@ -95,14 +95,14 @@ public class HeartMeasure extends AppCompatActivity implements SurfaceHolder.Cal
             @Override
             public void run() {
                 //do something
+                mPreviewRunning =false;
                 mCamera.setPreviewCallback(null);
                 mCamera.stopPreview();
-                mPreviewRunning =false;
             }
         };
 
 //主线程中调用：
-        mHandler.postDelayed(r, 45*1000);
+        mHandler.postDelayed(r, 10*1000);
     }
 
     @Override
@@ -160,11 +160,14 @@ public class HeartMeasure extends AppCompatActivity implements SurfaceHolder.Cal
     /**
      * FROM: https://github.com/phishman3579/android-heart-rate-monitor
      */
-    private static PreviewCallback previewCallback = new PreviewCallback() {
+    private PreviewCallback previewCallback = new PreviewCallback() {
 
 
         @Override
         public void onPreviewFrame(byte[] data, Camera camera) {
+            if (mPreviewRunning == false) {
+                 return;
+            }
             if (data == null) throw new NullPointerException();
             Camera.Size size = camera.getParameters().getPreviewSize();
             if (size == null) throw new NullPointerException();

@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.hardware.Camera.PreviewCallback;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.Handler;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -87,6 +88,21 @@ public class HeartMeasure extends AppCompatActivity implements SurfaceHolder.Cal
         mCamera.setParameters(parameters);
         mCamera.setPreviewCallback(previewCallback);
         startTime = System.currentTimeMillis();
+
+        final Handler mHandler = new Handler();
+        Runnable r = new Runnable() {
+
+            @Override
+            public void run() {
+                //do something
+                mCamera.setPreviewCallback(null);
+                mCamera.stopPreview();
+                mPreviewRunning =false;
+            }
+        };
+
+//主线程中调用：
+        mHandler.postDelayed(r, 45*1000);
     }
 
     @Override
@@ -192,13 +208,11 @@ public class HeartMeasure extends AppCompatActivity implements SurfaceHolder.Cal
             averageArray[averageIndex] = imgAvg;
             averageIndex++;
 
-            Toast mToast = Toast.makeText(c, "please wait 45S , and put your finger on the back camera", Toast.LENGTH_LONG);
-            mToast.show();
+            ts.setText("please wait 45S , and put your finger on the back camera");
             long endTime = System.currentTimeMillis();
             double totalTimeInSecs = (endTime - startTime) / 1000d;
             if (totalTimeInSecs >= 10) {
-                mToast.makeText(c, "finish the measure", Toast.LENGTH_LONG);
-                mToast.show();
+                ts.setText("finish the measure");
                 double bps = (beats / totalTimeInSecs);
                 int dpm = (int) (bps * 60d);
                 if (dpm < 30 || dpm > 180) {
@@ -228,7 +242,6 @@ public class HeartMeasure extends AppCompatActivity implements SurfaceHolder.Cal
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(c);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("LAST_MEASURE", String.valueOf(beatsAvg));
-                mToast.cancel();
                 editor.commit();
 
                 startTime = System.currentTimeMillis();

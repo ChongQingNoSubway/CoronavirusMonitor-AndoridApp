@@ -166,7 +166,7 @@ public class HeartMeasure extends AppCompatActivity implements SurfaceHolder.Cal
         @Override
         public void onPreviewFrame(byte[] data, Camera camera) {
             if (mPreviewRunning == false) {
-                 return;
+                return;
             }
             if (data == null) throw new NullPointerException();
             Camera.Size size = camera.getParameters().getPreviewSize();
@@ -257,5 +257,3 @@ public class HeartMeasure extends AppCompatActivity implements SurfaceHolder.Cal
 
 
 }
-
-

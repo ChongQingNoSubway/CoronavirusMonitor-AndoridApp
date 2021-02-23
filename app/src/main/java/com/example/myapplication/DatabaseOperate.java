@@ -22,10 +22,10 @@ public class DatabaseOperate extends SQLiteOpenHelper {
 
         private String DB_PATH = null;
         private static Integer Version = 1;
-        public static final String DB_NAME = "wenhui_zhu";
+        public static final String DB_NAME = "wenhui";
         public static final int DB_VERSION = 1;
         public static final String TABLE_NAME = "CoronavirusSymptomMonitor";
-        public static final String USERNAME = "wenhui";
+        public static final String USERNAME = "username";
         public static final String DATE = "date";
         public static final String HEART_RATE = "heartRate";
         public static final String RESPIRATORY_RATE = "respiratoryRate";
@@ -48,7 +48,7 @@ public class DatabaseOperate extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATION_TABLE = "CREATE TABLE if NOT EXISTS SignAndSymptoms ( "
+        String CREATION_TABLE = "CREATE TABLE if NOT EXISTS CoronavirusSymptomMonitor ( "
                 + "username TEXT, " + "date TEXT, "
                 + "heartRate REAL, " + "respiratoryRate REAL, " + "nausea REAL, "
                 + "headAche REAL, " + "diarrhea REAL, " + "soreThroat REAL, "
@@ -190,6 +190,31 @@ public class DatabaseOperate extends SQLiteOpenHelper {
         } catch (Exception e) {
             System.out.println("ERROR: Signs update failed! Exception - " + e);
         }
+    }
+
+
+    public HashMap<String, Float> getSymptomsData(String username, String currentDate, Context context) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT nausea, headache, diarrhea, soreThroat, fever, muscleAche, lossOfSmellOrTaste, cough, shortnessOfBreath, FeelingTired" +
+                        " FROM " + TABLE_NAME +
+                        " WHERE username = ?" +
+                        " AND date = ?",
+                new String[] {username, currentDate});
+
+        HashMap<String, Float> symptoms = new HashMap<>(); // "nausea" : 3, etc.
+        String[] names = context.getResources().getStringArray(R.array.symptoms_list);
+        for(int i = 0; i < names.length; ++i) { symptoms.put(names[i],0f); }
+
+        if(cursor.moveToFirst() && cursor.getCount() > 0) {
+
+            for(int i = 0; i < names.length; ++i) { symptoms.put(names[i], cursor.getFloat(i)); }
+
+            return symptoms;
+        }
+
+        cursor.close();
+        return symptoms;
     }
 
 }

@@ -10,4 +10,18 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="title_activity_main2">MainActivity</string>
+
+
+    <string-array name="symptoms_list">
+        <item>Nausea</item>
+        <item>Headache</item>
+        <item>Diarrhea</item>
+        <item>Sore throat</item>
+        <item>Fever</item>
+        <item>Muscle ache</item>
+        <item>Loss of smell or taste</item>
+        <item>Cough</item>
+        <item>Shortness of breath</item>
+        <item>Feeling tired</item>
+    </string-array>
 </resources>

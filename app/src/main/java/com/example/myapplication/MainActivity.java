@@ -46,6 +46,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
@@ -64,15 +65,17 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     private static final int averageArraySize = 4;
     private static final int[] averageArray = new int[averageArraySize];
     public static Context c;
-    SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-    final String date = sDateFormat.format(new java.util.Date());
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+    String date=format.format(new Date());
     private static final AtomicBoolean processing = new AtomicBoolean(false);
     public  static TextView ts = null;
+    public  static TextView tip = null;
     private static double beats = 0;
     private static long startTime = 0;
     private static int beatsIndex = 0;
     private static final int beatsArraySize = 3;
     private static final int[] beatsArray = new int[beatsArraySize];
+    private boolean isFinished = false;
     private static int heartRate = 0;
     public enum TYPE {
         GREEN, RED
@@ -229,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
             ts.setText("please wait 45S , and put your finger on the back camera");
             long endTime = System.currentTimeMillis();
             double totalTimeInSecs = (endTime - startTime) / 1000d;
-            if (totalTimeInSecs >= 10) {
+            if (totalTimeInSecs >= 45) {
                 double bps = (beats / totalTimeInSecs);
                 int dpm = (int) (bps * 60d);
 //                if (dpm < 30 || dpm > 180) {
@@ -285,10 +288,10 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         SurfaceHolder = SurfaceView.getHolder();
         SurfaceHolder.addCallback(this);
         SurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-
+        tip = (TextView) findViewById(R.id.tipText);
         c = getApplicationContext();
 
-
+        tip.setText("Please measure Heart and Respiratory Rate First, then click the upload button");
         Button upload = (Button) findViewById(R.id.uploadSigns);
 
         final TextView respiratoryRateView = findViewById(R.id.respiratory_rate);
@@ -316,7 +319,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                     }
                 };
 
-                mHandler.postDelayed(r, 12 * 1000);
+                mHandler.postDelayed(r, 46 * 1000);
             }
         });
 
@@ -406,6 +409,8 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                         "success",
                         Toast.LENGTH_SHORT)
                         .show();
+                isFinished = true;
+                tip.setText("upload the heart and respiratory data success! clike the Symptom button! ");
             }
         });
 
@@ -413,6 +418,10 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         nextStep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if( isFinished == false) {
+                    tip.setText("Please upload the heart and respiratory data first! ");
+                    return;
+                }
                 Intent intent = new Intent(MainActivity.this ,MainActivity2.class);
                 startActivity(intent);
                 MainActivity.this.finish();

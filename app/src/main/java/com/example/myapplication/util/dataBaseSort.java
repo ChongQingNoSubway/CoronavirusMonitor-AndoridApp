@@ -70,7 +70,7 @@ public class dataBaseSort {
 
         public float getTiredness() { return FeelingTired; }
 
-        public void setTiredness(float tiredness) { this.FeelingTired = tiredness; }
+        public void setTiredness(float feelTired) { this.FeelingTired = feelTired; }
 
 
 }

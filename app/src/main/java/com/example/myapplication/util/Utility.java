@@ -5,11 +5,7 @@ public class Utility {
 
     }
 
-    /**
-     * Finds average of all values in the list by (SUM / #ELEMENTS)
-     * @param values
-     * @return average
-     */
+
     public static <E> float findAverageOf1DArray(E[] values) {
 
         float sum = 0;
@@ -25,11 +21,7 @@ public class Utility {
         return avg;
     }
 
-    /**
-     * Apply smoothing to all values in the list by taking average of neighboring values along with global average
-     * @param values
-     * @return smoothed values
-     */
+
     public static <E> Float[] applySmoothingTo1DArray(E[] values) {
 
         final float alpha = 0.85f;
@@ -49,16 +41,10 @@ public class Utility {
             smooth[i] = improved;
         }
 
-        //System.out.println("Smoothed values: ");
-        //for(E e : values) { System.out.print(e + " "); }
         return smooth;
     }
 
-    /**
-     * Finds the number of times the values plotted curve would cross the 0-axis
-     * @param values
-     * @return number of zero crossings
-     */
+
     public static <E> int findZeroCrossingsIn1DArray(E[] values) {
 
         float avg = findAverageOf1DArray(values);
@@ -117,4 +103,6 @@ public class Utility {
         System.out.println("ZeroCrossings: "+ zeroCrossings);
         return zeroCrossings;
     }
+
+
 }
